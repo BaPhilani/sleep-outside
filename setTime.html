@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Countdown Timer</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: #111827;
+            --accent: #38bdf8;
+            --accent-strong: #0ea5e9;
+            --text: #e2e8f0;
+            --muted: #94a3b8;
+            --button: #f8fafc;
+            --button-text: #0f172a;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #020617, #0f172a 45%, #1e293b);
+            color: var(--text);
+        }
+
+        .timer-card {
+            width: min(90vw, 420px);
+            padding: 2rem;
+            border-radius: 20px;
+            background: rgba(17, 24, 39, 0.95);
+            box-shadow: 0 25px 50px rgba(14, 165, 233, 0.2);
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0 0 1.5rem;
+            font-size: clamp(3rem, 8vw, 5rem);
+            letter-spacing: 0.08em;
+            color: var(--accent);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        button {
+            border: none;
+            border-radius: 999px;
+            padding: 0.8rem 1.3rem;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        #startButton {
+            background: var(--accent);
+            color: var(--button-text);
+        }
+
+        #pauseButton {
+            background: var(--button);
+            color: var(--button-text);
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        label {
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        input {
+            width: 140px;
+            padding: 0.7rem 0.8rem;
+            border-radius: 10px;
+            border: 1px solid rgba(148, 163, 184, 0.5);
+            background: rgba(15, 23, 42, 0.8);
+            color: var(--text);
+            font-size: 1rem;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="timer-card">
+        <h1 id="countdown">10</h1>
+
+        <div class="controls">
+            <button id="startButton" type="button">Start</button>
+            <button id="pauseButton" type="button">Pause</button>
+        </div>
+
+        <div class="input-group">
+            <label for="timeInput">Custom starting time (seconds)</label>
+            <input id="timeInput" type="number" min="1" max="300" value="10" />
+        </div>
+    </div>
+
+    <script>
+        const countdown = document.getElementById('countdown');
+        const startButton = document.getElementById('startButton');
+        const pauseButton = document.getElementById('pauseButton');
+        const timeInput = document.getElementById('timeInput');
+
+        let timeLeft = Number(timeInput.value) || 10;
+        let timerId = null;
+        let timeoutId = null;
+        let isRunning = false;
+        let isPaused = false;
+
+        function updateCountdown() {
+            countdown.textContent = timeLeft;
+        }
+
+        function stopInterval() {
+            if (timerId !== null) {
+                clearInterval(timerId);
+                timerId = null;
+            }
+        }
+
+        function stopCountdown() {
+            stopInterval();
+            isRunning = false;
+            isPaused = false;
+            pauseButton.textContent = 'Pause';
+        }
+
+        function startCountdown() {
+            const customTime = Number(timeInput.value);
+
+            if (!Number.isFinite(customTime) || customTime < 1) {
+                timeLeft = 10;
+                timeInput.value = 10;
+            } else {
+                timeLeft = customTime;
+            }
+
+            updateCountdown();
+            stopInterval();
+            if (timeoutId !== null) {
+                clearTimeout(timeoutId);
+                timeoutId = null;
+            }
+
+            isRunning = true;
+            isPaused = false;
+            pauseButton.textContent = 'Pause';
+
+            timerId = setInterval(() => {
+                if (isPaused) return;
+
+                timeLeft -= 1;
+                updateCountdown();
+
+                if (timeLeft <= 0) {
+                    timeLeft = 0;
+                    updateCountdown();
+                    stopCountdown();
+
+                    timeoutId = setTimeout(() => {
+                        countdown.textContent = "Time's up!";
+                    }, 200);
+                }
+            }, 1000);
+        }
+
+        startButton.addEventListener('click', startCountdown);
+
+        pauseButton.addEventListener('click', () => {
+            if (!isRunning) return;
+
+            isPaused = !isPaused;
+            pauseButton.textContent = isPaused ? 'Resume' : 'Pause';
+        });
+
+        updateCountdown();
+    </script>
+</body>
+
+</html>
