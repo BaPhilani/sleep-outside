@@ -36,21 +36,24 @@ export async function loadTemplate(path) {
   return template;
 }
 
+export function getParam(param) {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(param);
+}
+
 export async function loadHeaderFooter() {
-  const headerTemplate = await loadTemplate(
+  const isNestedPage =
     window.location.pathname.includes('/cart/') ||
-      window.location.pathname.includes('/checkout/') ||
-      window.location.pathname.includes('/product_pages/')
-      ? '../partials/header.html'
-      : 'partials/header.html'
+    window.location.pathname.includes('/checkout/') ||
+    window.location.pathname.includes('/product_pages/') ||
+    window.location.pathname.includes('/product_listing/');
+
+  const headerTemplate = await loadTemplate(
+    isNestedPage ? '../partials/header.html' : 'partials/header.html',
   );
 
   const footerTemplate = await loadTemplate(
-    window.location.pathname.includes('/cart/') ||
-      window.location.pathname.includes('/checkout/') ||
-      window.location.pathname.includes('/product_pages/')
-      ? '../partials/footer.html'
-      : 'partials/footer.html'
+    isNestedPage ? '../partials/footer.html' : 'partials/footer.html',
   );
 
   const headerElement = document.querySelector('#main-header');

@@ -90,7 +90,7 @@ p {
   margin-top: -1.3em;
 }
 
-.logo--square > div {
+.logo--square>div {
   margin-top: -1.7em;
 }
 
@@ -189,6 +189,38 @@ button {
 
 .card__name {
   font-size: 1em;
+}
+
+.category-section {
+  padding: 1rem;
+}
+
+.category-section h2 {
+  margin-bottom: 1rem;
+}
+
+.category-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+}
+
+.category-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  border: 1px solid var(--light-grey);
+  text-decoration: none;
+  color: var(--dark-grey);
+  background: #fff;
+}
+
+.category-card img {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
 }
 
 /* End product list card */
