@@ -30,6 +30,21 @@ export function renderWithTemplate(template, parentElement, data, callback) {
   }
 }
 
+export function renderListWithTemplate(
+  templateFn,
+  parentElement,
+  list,
+  position = 'afterbegin',
+  clear = false,
+) {
+  if (clear) {
+    parentElement.innerHTML = '';
+  }
+
+  const htmlStrings = list.map(templateFn);
+  parentElement.insertAdjacentHTML(position, htmlStrings.join(''));
+}
+
 export async function loadTemplate(path) {
   const response = await fetch(path);
   const template = await response.text();
