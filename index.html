@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description"
+        content="Calculate household energy demand, solar panel requirements, battery capacity, inverter size, and a preliminary solar quotation." />
+    <title>PAVI Projects Solar System Size Calculator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Roboto:wght@400;500;700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+</head>
+
+<body>
+    <header class="site-header">
+        <a class="brand" href="#top" aria-label="PAVI Projects home">
+            <span class="brand-icon" aria-hidden="true">☀</span>
+            <span><strong>PAVI Projects</strong><small>Solar System Size Calculator</small></span>
+        </a>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="primary-nav">
+            ☰ <span class="sr-only">Open navigation</span>
+        </button>
+        <nav id="primary-nav" class="main-nav" aria-label="Main navigation">
+            <a href="#calculator">Calculator</a>
+            <a href="#results">Results</a>
+            <a href="#catalogue">Catalogue</a>
+            <a href="#quotes">Request Quote</a>
+        </nav>
+    </header>
+
+    <main id="top">
+        <section class="hero">
+            <div class="hero-copy">
+                <p class="eyebrow">Plan a brighter energy future</p>
+                <h1>Size a solar system around the way you live.</h1>
+                <p>
+                    Estimate daily consumption, available solar resource, storage, inverter needs,
+                    required panels, and a practical package recommendation.
+                </p>
+                <div class="hero-actions">
+                    <a class="button button-primary" href="#calculator">Start calculation</a>
+                    <a class="button button-secondary" href="#catalogue">View products</a>
+                </div>
+                <ul class="trust-list" aria-label="Project highlights">
+                    <li>Location-based solar estimates</li>
+                    <li>Customer-ready package sizing</li>
+                    <li>Transparent cost estimates</li>
+                </ul>
+            </div>
+            <div class="hero-card" aria-label="Solar system summary preview">
+                <div class="sun-orbit" aria-hidden="true"><span></span></div>
+                <p>Typical system preview</p>
+                <strong>5.0 kW</strong>
+                <span>Estimated annual production</span>
+                <div class="mini-metrics">
+                    <div><b>8.4</b><small>kWh/day</small></div>
+                    <div><b>2.5</b><small>hours autonomy</small></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="calculator" class="section-shell">
+            <div class="section-heading">
+                <p class="eyebrow">Solar sizing engine</p>
+                <h2>Build your energy profile</h2>
+            </div>
+
+            <div class="calculator-grid">
+                <form id="location-form" class="panel" aria-labelledby="location-title">
+                    <div class="panel-header">
+                        <h3 id="location-title">1. Location</h3>
+                        <span class="status-badge" id="location-status">Ready</span>
+                    </div>
+                    <label for="location-input">Search for a place</label>
+                    <div class="input-row">
+                        <input id="location-input" name="location" type="search"
+                            placeholder="e.g. Pretoria, South Africa" />
+                        <button class="button button-primary" type="submit">Find</button>
+                    </div>
+                    <p id="location-result" class="form-note">Use a city, town, or address.</p>
+                    <div class="api-key-row">
+                        <input id="opencage-key" type="password" autocomplete="off"
+                            placeholder="OpenCage API key (optional)" />
+                        <button class="button button-secondary" id="use-demo-location" type="button">Use demo</button>
+                    </div>
+                </form>
+
+                <form id="appliance-form" class="panel" aria-labelledby="appliance-title">
+                    <div class="panel-header">
+                        <h3 id="appliance-title">2. Appliances</h3>
+                        <button class="text-button" type="button" id="add-appliance">Add appliance</button>
+                    </div>
+                    <div id="appliance-list" class="appliance-list" aria-live="polite"></div>
+                    <div class="form-actions">
+                        <button class="button button-primary" type="submit">Calculate load</button>
+                        <button class="button button-secondary" type="button" id="reset-form">Reset</button>
+                    </div>
+                </form>
+
+                <aside class="panel load-summary" aria-labelledby="summary-title">
+                    <div class="panel-header">
+                        <h3 id="summary-title">3. Load summary</h3>
+                    </div>
+                    <dl>
+                        <div>
+                            <dt>Daily energy</dt>
+                            <dd id="daily-energy">0 kWh</dd>
+                        </div>
+                        <div>
+                            <dt>Peak demand</dt>
+                            <dd id="peak-demand">0 kW</dd>
+                        </div>
+                        <div>
+                            <dt>Average daily sun</dt>
+                            <dd id="sun-hours">0 h</dd>
+                        </div>
+                        <div>
+                            <dt>Recommended system</dt>
+                            <dd id="system-recommendation">—</dd>
+                        </div>
+                    </dl>
+                </aside>
+            </div>
+        </section>
+
+        <section id="results" class="section-shell results-section">
+            <div class="section-heading">
+                <p class="eyebrow">Sizing results</p>
+                <h2>Your system recommendation</h2>
+            </div>
+            <div class="result-grid">
+                <article class="result-card battery-card">
+                    <span class="card-icon" aria-hidden="true">🔋</span>
+                    <h3>Battery storage</h3>
+                    <p id="battery-result">Enter your load and autonomy settings.</p>
+                </article>
+                <article class="result-card inverter-card">
+                    <span class="card-icon" aria-hidden="true">⚡</span>
+                    <h3>Inverter capacity</h3>
+                    <p id="inverter-result">Waiting for calculation.</p>
+                </article>
+                <article class="result-card panels-card">
+                    <span class="card-icon" aria-hidden="true">▣</span>
+                    <h3>Solar panels</h3>
+                    <p id="panel-result">Waiting for calculation.</p>
+                </article>
+                <article class="result-card cost-card">
+                    <span class="card-icon" aria-hidden="true">💰</span>
+                    <h3>Estimated cost</h3>
+                    <p id="cost-result">Waiting for calculation.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="section-shell package-section">
+            <div class="section-heading">
+                <p class="eyebrow">Smart matching</p>
+                <h2>Recommended solar packages</h2>
+            </div>
+            <div id="package-list" class="package-list" aria-live="polite"></div>
+        </section>
+
+        <section id="catalogue" class="section-shell catalogue-section">
+            <div class="section-heading">
+                <p class="eyebrow">Product catalogue</p>
+                <h2>Components and prices</h2>
+            </div>
+            <div id="product-catalogue" class="catalogue-grid" aria-live="polite"></div>
+        </section>
+
+        <section id="quotes" class="section-shell quote-section">
+            <div class="section-heading">
+                <p class="eyebrow">Quotation</p>
+                <h2>Request a tailored proposal</h2>
+            </div>
+            <form id="quote-form" class="quote-form">
+                <div class="field"><label for="customer-name">Full name</label><input id="customer-name" name="name"
+                        required /></div>
+                <div class="field"><label for="customer-email">Email</label><input id="customer-email" name="email"
+                        type="email" required /></div>
+                <div class="field"><label for="customer-phone">Phone</label><input id="customer-phone" name="phone"
+                        type="tel" /></div>
+                <div class="field full-width"><label for="customer-message">Project notes</label><textarea
+                        id="customer-message" name="message" rows="4"
+                        placeholder="Tell us about your property, energy goals, or preferred system type."></textarea>
+                </div>
+                <div class="quote-summary field full-width">
+                    <strong id="quote-summary">Estimated package: No package selected</strong>
+                    <button class="button button-primary" type="submit">Send inquiry</button>
+                </div>
+            </form>
+            <div id="quote-message" class="form-message" role="status" aria-live="polite"></div>
+        </section>
+
+        <section class="section-shell feedback-section">
+            <div class="section-heading">
+                <p class="eyebrow">Customer confidence</p>
+                <h2>Testimonials</h2>
+            </div>
+            <div id="testimonial-list" class="testimonial-list"></div>
+            <form id="feedback-form" class="feedback-form">
+                <h3>Share your feedback</h3>
+                <div class="field"><label for="review-name">Name</label><input id="review-name" required /></div>
+                <div class="field"><label for="review-rating">Rating</label><select id="review-rating">
+                        <option value="5">5 stars</option>
+                        <option value="4">4 stars</option>
+                        <option value="3">3 stars</option>
+                        <option value="2">2 stars</option>
+                        <option value="1">1 star</option>
+                    </select></div>
+                <div class="field full-width"><label for="review-message">Comment</label><textarea id="review-message"
+                        rows="3" required></textarea></div>
+                <button class="button button-primary" type="submit">Submit review</button>
+            </form>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p>© <span id="current-year"></span> PAVI Projects Solar System Size Calculator.</p>
+        <p>Independent estimates for planning only.</p>
+    </footer>
+
+    <script type="module" src="./js/app.js"></script>
+</body>
+
+</html>
