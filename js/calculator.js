@@ -7,9 +7,9 @@ export const DEFAULT_APPLIANCES = [
 ];
 
 export const DEFAULT_SOLAR_RESOURCE = {
-    latitude: -25.75,
-    longitude: 28.23,
-    locationName: "Pretoria, South Africa",
+    latitude: -17.8252,
+    longitude: 31.0335,
+    locationName: "Harare, Zimbabwe",
     peakSunHours: 5.4,
     monthlyProduction: [5.0, 5.4, 6.1, 6.8, 7.3, 7.1, 7.4, 7.0, 6.4, 5.8, 5.2, 5.1],
 };

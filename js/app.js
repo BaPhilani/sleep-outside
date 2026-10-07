@@ -59,9 +59,10 @@ const PACKAGE_DEFINITIONS = [
 ];
 
 const defaultTestimonials = [
-    { name: "Mpho N.", rating: 5, message: "The calculator helped us compare realistic options before talking to an installer." },
-    { name: "Sarah L.", rating: 5, message: "It was simple to understand and gave us a clear starting point for our budget." },
-    { name: "Daniel K.", rating: 4, message: "The package suggestions made our planning much easier." },
+    { name: "Mimi", rating: 5, message: "The calculator helped us compare realistic options before talking to an installer." },
+    { name: "Thabani", rating: 5, message: "It was simple to understand and gave us a clear starting point for our budget." },
+    { name: "Vimbainashe", rating: 4, message: "The package suggestions made our planning much easier." },
+    { name: "Philanu", rating: 5, message: "The solar estimates gave our family a helpful starting point for planning." },
 ];
 
 function formatKilowatt(value) {
@@ -73,7 +74,7 @@ function formatKilowattHour(value) {
 }
 
 function formatCurrency(value) {
-    return new Intl.NumberFormat("en-ZA", { style: "currency", currency: "ZAR", maximumFractionDigits: 0 }).format(value);
+    return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(value);
 }
 
 function updatePackageSelection(value) {

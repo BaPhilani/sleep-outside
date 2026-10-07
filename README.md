@@ -5,7 +5,7 @@ PAVI Projects Solar System Size Calculator is a responsive solar-system sizing w
 ## Features
 
 - Appliance load calculator with editable item quantities.
-- OpenCage location lookup and PVGIS solar-resource integration.
+- Zimbabwe location suggestions and OpenCage lookup restricted to Zimbabwe, with Open-Meteo solar-resource integration.
 - Battery, inverter, panel, and cost calculations.
 - Solar package recommendations from 1.5 kVA through 20 kVA.
 - Product catalogue with nine JSON-backed components and detailed specifications.
@@ -31,11 +31,11 @@ Open the local URL shown by Vite in the terminal.
 - Battery capacity uses a 50% depth-of-discharge assumption and a 10% efficiency loss.
 - A practical inverter safety factor of 1.25 is applied to peak demand.
 - Panel sizing uses the selected peak-sun-hours value and a 0.8 system efficiency factor.
-- Product prices are sample estimates and should be updated before commercial use.
+- Product prices and system estimates are sample amounts displayed in US dollars (USD); update them with current Zimbabwe supplier prices before commercial use.
 
 ## API configuration
 
-The prototype requires a free OpenCage API key for geocoding. Add the key to the location form before searching a custom address.
+The prototype uses Harare, Zimbabwe for its demo location and suggests Zimbabwean cities and towns. A free OpenCage API key is required to search a custom location; searches are restricted to Zimbabwe.
 
 Open-Meteo solar data is requested when available. If the request fails or the network is unavailable, the application uses a conservative default solar-resource profile so the calculator remains usable.
 

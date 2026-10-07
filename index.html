@@ -77,14 +77,29 @@
                     </div>
                     <label for="location-input">Search for a place</label>
                     <div class="input-row">
-                        <input id="location-input" name="location" type="search"
-                            placeholder="e.g. Pretoria, South Africa" />
+                        <input id="location-input" name="location" type="search" list="zimbabwe-locations"
+                            placeholder="e.g. Harare, Zimbabwe" autocomplete="off" />
+                        <datalist id="zimbabwe-locations">
+                            <option value="Damafalls, Ruwa, Zimbabwe"></option>
+                            <option value="Harare, Zimbabwe"></option>
+                            <option value="Bulawayo, Zimbabwe"></option>
+                            <option value="Mutare, Zimbabwe"></option>
+                            <option value="Gweru, Zimbabwe"></option>
+                            <option value="Kwekwe, Zimbabwe"></option>
+                            <option value="Masvingo, Zimbabwe"></option>
+                            <option value="Chinhoyi, Zimbabwe"></option>
+                            <option value="Marondera, Zimbabwe"></option>
+                            <option value="Victoria Falls, Zimbabwe"></option>
+                            <option value="Kadoma, Zimbabwe"></option>
+                            <option value="Bindura, Zimbabwe"></option>
+                            <option value="Chipinge, Zimbabwe"></option>
+                        </datalist>
                         <button class="button button-primary" type="submit">Find</button>
                     </div>
                     <p id="location-result" class="form-note">Use a city, town, or address.</p>
                     <div class="api-key-row">
                         <input id="opencage-key" type="password" autocomplete="off"
-                            placeholder="OpenCage API key (optional)" />
+                            placeholder="OpenCage API key (required to search)" />
                         <button class="button button-secondary" id="use-demo-location" type="button">Use demo</button>
                     </div>
                 </form>
@@ -168,6 +183,7 @@
             <div class="section-heading">
                 <p class="eyebrow">Product catalogue</p>
                 <h2>Components and prices</h2>
+                <p class="form-note">Featured brands: MUST · HZ</p>
             </div>
             <div id="product-catalogue" class="catalogue-grid" aria-live="polite"></div>
         </section>
