@@ -10,12 +10,15 @@ function buildUrl(base, params) {
 }
 
 export async function fetchLocationCoordinates(location, apiKey) {
-    if (!location.trim()) throw new Error("Enter a place name or address.");
-    if (!apiKey) throw new Error("Enter an OpenCage API key to search. You can also choose Use demo for Harare.");
+    const normalizedLocation = typeof location === "string" ? location.trim() : "";
+    const normalizedApiKey = typeof apiKey === "string" ? apiKey.trim() : "";
+
+    if (!normalizedLocation) throw new Error("Enter a place name or address.");
+    if (!normalizedApiKey) throw new Error("Enter an OpenCage API key to search. You can also choose Use demo for Harare.");
 
     const response = await fetch(buildUrl(OPEN_CAGE_BASE, {
-        q: location,
-        key: apiKey,
+        q: normalizedLocation,
+        key: normalizedApiKey,
         language: "en",
         countrycode: "zw",
         no_annotations: 1,

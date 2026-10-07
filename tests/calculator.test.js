@@ -6,6 +6,7 @@ import {
     calculateDailyEnergy,
     calculateInverterSize,
     calculatePanelRequirements,
+    calculatePeakDemand,
     nearestPackageCapacity,
     DEFAULT_SOLAR_RESOURCE,
 } from "../js/calculator.js";
@@ -85,4 +86,17 @@ test("restricts OpenCage location searches to Zimbabwe", async () => {
     } finally {
         globalThis.fetch = originalFetch;
     }
+});
+
+test("treats invalid appliance values as zero instead of breaking calculations", () => {
+    const appliances = [
+        { power: -100, quantity: 2, hours: 5 },
+        { power: "abc", quantity: "3", hours: -2 },
+        null,
+    ];
+
+    assert.equal(calculateDailyEnergy(appliances), 0);
+    assert.equal(calculatePeakDemand(appliances), 0);
+    assert.equal(calculateBatterySize({ dailyEnergy: -4, autonomyDays: -2, voltage: 0, depthOfDischarge: -0.5 }).capacityAh, 0);
+    assert.equal(calculatePanelRequirements({ dailyEnergy: -8, peakSunHours: -5, systemEfficiency: -0.8, panelWattage: 0 }).panelCount, 0);
 });

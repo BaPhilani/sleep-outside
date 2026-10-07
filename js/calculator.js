@@ -14,43 +14,56 @@ export const DEFAULT_SOLAR_RESOURCE = {
     monthlyProduction: [5.0, 5.4, 6.1, 6.8, 7.3, 7.1, 7.4, 7.0, 6.4, 5.8, 5.2, 5.1],
 };
 
-export function calculateDailyEnergy(appliances) {
-    return appliances.reduce((total, appliance) => {
-        const power = Number(appliance.power) || 0;
-        const hours = Number(appliance.hours) || 0;
-        const quantity = Number(appliance.quantity) || 0;
+function toFiniteNumber(value, fallback = 0) {
+    const numericValue = Number(value);
+    return Number.isFinite(numericValue) ? numericValue : fallback;
+}
+
+export function calculateDailyEnergy(appliances = []) {
+    return (appliances ?? []).reduce((total, appliance) => {
+        if (!appliance) return total;
+        const power = Math.max(toFiniteNumber(appliance.power, 0), 0);
+        const hours = Math.max(toFiniteNumber(appliance.hours, 0), 0);
+        const quantity = Math.max(toFiniteNumber(appliance.quantity, 0), 0);
         return total + (power * hours * quantity) / 1000;
     }, 0);
 }
 
-export function calculatePeakDemand(appliances) {
-    return appliances.reduce((peak, appliance) => {
-        const power = Number(appliance.power) || 0;
-        const quantity = Number(appliance.quantity) || 0;
+export function calculatePeakDemand(appliances = []) {
+    return (appliances ?? []).reduce((peak, appliance) => {
+        if (!appliance) return peak;
+        const power = Math.max(toFiniteNumber(appliance.power, 0), 0);
+        const quantity = Math.max(toFiniteNumber(appliance.quantity, 0), 0);
         return Math.max(peak, (power * quantity) / 1000);
     }, 0);
 }
 
 export function calculateBatterySize({
-    dailyEnergy,
+    dailyEnergy = 0,
     autonomyDays = 1,
     voltage = 24,
     depthOfDischarge = 0.5,
 }) {
-    const safeDailyEnergy = Math.max(dailyEnergy, 0) * 1.1;
-    const usableEnergy = safeDailyEnergy * autonomyDays;
-    const capacityAh = (usableEnergy * 1000) / (voltage * depthOfDischarge);
+    const safeDailyEnergy = Math.max(toFiniteNumber(dailyEnergy, 0), 0) * 1.1;
+    const safeAutonomyDays = Math.max(toFiniteNumber(autonomyDays, 1), 0);
+    const safeVoltage = Math.max(toFiniteNumber(voltage, 24), 1);
+    const safeDepthOfDischarge = Math.max(toFiniteNumber(depthOfDischarge, 0.5), 0.05);
+    const usableEnergy = safeDailyEnergy * safeAutonomyDays;
+    const capacityAh = usableEnergy > 0 ? (usableEnergy * 1000) / (safeVoltage * safeDepthOfDischarge) : 0;
 
     return {
         capacityAh: Number(capacityAh.toFixed(1)),
-        autonomyDays,
-        voltage,
-        depthOfDischarge,
+        autonomyDays: safeAutonomyDays,
+        voltage: safeVoltage,
+        depthOfDischarge: safeDepthOfDischarge,
     };
 }
 
 export function calculateInverterSize(peakDemand, safetyFactor = 1.25) {
-    const minimumKw = Math.max(peakDemand, 0) * safetyFactor;
+    const safePeakDemand = Math.max(toFiniteNumber(peakDemand, 0), 0);
+    const safeSafetyFactor = Math.max(toFiniteNumber(safetyFactor, 1.25), 0.01);
+    const minimumKw = safePeakDemand * safeSafetyFactor;
+
     return {
         minimumKw: Number(minimumKw.toFixed(2)),
         kva: Number((minimumKw / 0.8).toFixed(2)),
@@ -59,26 +72,31 @@ export function calculateInverterSize(peakDemand, safetyFactor = 1.25) {
 }
 
 export function calculatePanelRequirements({
-    dailyEnergy,
+    dailyEnergy = 0,
     peakSunHours = 5.4,
     systemEfficiency = 0.8,
     panelWattage = 400,
 }) {
-    const requiredKw = Math.max(dailyEnergy, 0) / Math.max(peakSunHours, 0.1);
-    const arrayKw = requiredKw / systemEfficiency;
-    const panelCount = Math.ceil((arrayKw * 1000) / panelWattage);
+    const safeDailyEnergy = Math.max(toFiniteNumber(dailyEnergy, 0), 0);
+    const safePeakSunHours = Math.max(toFiniteNumber(peakSunHours, 5.4), 0.1);
+    const safeSystemEfficiency = Math.max(toFiniteNumber(systemEfficiency, 0.8), 0.01);
+    const safePanelWattage = Math.max(toFiniteNumber(panelWattage, 400), 1);
+    const requiredKw = safeDailyEnergy / safePeakSunHours;
+    const arrayKw = requiredKw / safeSystemEfficiency;
+    const panelCount = Math.max(0, Math.ceil((arrayKw * 1000) / safePanelWattage));
 
     return {
         requiredKw: Number(arrayKw.toFixed(2)),
         panelCount,
-        estimatedDailyProduction: Number((panelCount * panelWattage * peakSunHours / 1000).toFixed(1)),
-        panelWattage,
+        estimatedDailyProduction: Number((panelCount * safePanelWattage * safePeakSunHours / 1000).toFixed(1)),
+        panelWattage: safePanelWattage,
     };
 }
 
 export function nearestPackageCapacity(minimumKw) {
     const candidateKva = [1.5, 3.2, 5, 6.2, 10, 20];
-    const minimumKva = minimumKw / 0.8;
+    const safeMinimumKw = Math.max(toFiniteNumber(minimumKw, 0), 0);
+    const minimumKva = safeMinimumKw / 0.8;
     return candidateKva.find((value) => value >= minimumKva) ?? candidateKva[candidateKva.length - 1];
 }
 
